@@ -5,14 +5,16 @@ import {List, ListItem} from '@material-ui/core';
 
 const ProductList = props => {
   return (
-    <List component="ul">
-      <ListItem>Patelnia, cena: 89,99zł</ListItem>
+    <List component='ul'>
+      {
+        props.productsInCart.map(product => {
+          return <ListItem key={ product.pid }>{ product.name }, cena: { product.price }</ListItem>;
+        })
+      }
     </List>
   );
 };
 
-ProductList.propTypes = {
-
-};
+ProductList.propTypes = {};
 
 export default ProductList;
