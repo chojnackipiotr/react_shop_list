@@ -1,7 +1,8 @@
 import React, {useEffect, useReducer} from 'react';
 import './App.css';
 
-import {Container, Typography} from '@material-ui/core';
+import Alert from '../reusable/Alert/Alert';
+import {CircularProgress, Container, Typography} from '@material-ui/core';
 import ProductList from '../ProductList/ProductList';
 import {getCartProducts} from '../../utils/api';
 
@@ -43,15 +44,26 @@ const App = () => {
           },
         });
       })
-      .catch((err) => {
+      .catch(( err ) => {
         dispatch({
           type: 'SET_MAIN_ERROR',
           payload: {
-            mainErrorMessage: err,
+            mainErrorMessage: err.message,
           },
         });
       });
   }, []);
+
+  const getContent = () => {
+    return state.mainErrorMessage
+           ?
+           <Alert message={state.mainErrorMessage} className='mainError'/>
+           :
+           <ProductList
+             productsInCart={ state.productsInCart }
+             fetchingProducts={ state.fetchingProducts }
+           />;
+  };
 
   return (
     <Container
@@ -63,10 +75,13 @@ const App = () => {
         component='h3'>
         Lista produktów:
       </Typography>
-      <ProductList
-        productsInCart={ state.productsInCart }
-        fetchingProducts={ state.fetchingProducts }
-      />
+      {
+        state.fetchingProducts
+        ?
+        <CircularProgress />
+        :
+        getContent()
+      }
     </Container>
   );
 };

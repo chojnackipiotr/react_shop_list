@@ -1,27 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {CircularProgress, List, ListItem} from '@material-ui/core';
+import {List, ListItem} from '@material-ui/core';
 
-const ProductList = ({productsInCart, fetchingProducts}) => {
-  const setListContent = () => {
-    if (productsInCart.length === 0) {
-      return 'Brak produktów'
-    } else {
-      return 'Lista'
-    }
-  }
-  
+const ProductList = props => {
   return (
-    <>
-    {
-      fetchingProducts
-      ?
-      <CircularProgress />
-      :
-      setListContent()
-    }
-    </>
+    <List component="ul">
+      <ListItem>Patelnia, cena: 89,99zł</ListItem>
+    </List>
   );
 };
 
