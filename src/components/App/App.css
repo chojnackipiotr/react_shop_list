@@ -25,3 +25,6 @@ img {
 }
 
 /*END OF CSS RESET*/
+.mainContainer {
+    padding-top: 1rem;
+}
