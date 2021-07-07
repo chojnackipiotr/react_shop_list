@@ -1,0 +1,20 @@
+.productListItem__wrapper {
+    display: flex;
+}
+
+.productListItem__wrapper:hover {
+ background-color: rgba(136, 136, 136, 0.1);
+}
+
+.productListItem__basicInfo {
+
+}
+
+.productListItem__nameInfo {
+    font-size: 1.125rem;
+}
+
+.productListItem__priceInfo {
+    padding-left: 0.5rem;
+    font-weight: 500;
+}

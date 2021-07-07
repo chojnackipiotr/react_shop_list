@@ -20,6 +20,11 @@ function reducer( state = initialState, action ) {
         productsInCart: action.payload.productsInCart,
         fetchingProducts: false,
       };
+    case 'UPDATE_CART_PRODUCTS':
+      return {
+        ...state,
+        productsInCart: action.payload.productsInCart,
+      }
     case 'SET_MAIN_ERROR':
       return {
         ...state,
@@ -37,10 +42,16 @@ const App = () => {
   useEffect(() => {
     getCartProducts()
       .then(res => {
+        const products = res.map(product => {
+          return {
+            ...product,
+            quantity: product.min
+          }
+        })
         dispatch({
           type: 'SET_CART_PRODUCTS',
           payload: {
-            productsInCart: res,
+            productsInCart: products,
           },
         });
       })
@@ -54,6 +65,46 @@ const App = () => {
       });
   }, []);
 
+  const addProduct = (pid) => {
+    const updatedProductList = state.productsInCart.map(product => {
+      if (product.pid === pid) {
+        return {
+          ...product,
+          quantity: product.quantity + 1
+        }
+      } else {
+        return product
+      }
+    });
+
+    dispatch({
+      type: 'UPDATE_CART_PRODUCTS',
+      payload: {
+        productsInCart: updatedProductList,
+      }
+    })
+  }
+
+  const removeProduct = (pid) => {
+    const updatedProductList = state.productsInCart.map(product => {
+      if (product.pid === pid) {
+        return {
+          ...product,
+          quantity: product.quantity - 1
+        }
+      } else {
+        return product
+      }
+    });
+
+    dispatch({
+      type: 'UPDATE_CART_PRODUCTS',
+      payload: {
+        productsInCart: updatedProductList,
+      }
+    })
+  }
+
   const getContent = () => {
     return state.mainErrorMessage
            ?
@@ -62,12 +113,14 @@ const App = () => {
            <ProductList
              productsInCart={ state.productsInCart }
              fetchingProducts={ state.fetchingProducts }
+             addProduct={addProduct}
+             removeProduct={removeProduct}
            />;
   };
 
   return (
     <Container
-      maxWidth='sm'
+      maxWidth='lg'
       className={ 'mainContainer' }
     >
       <Typography
