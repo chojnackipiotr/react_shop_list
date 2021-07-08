@@ -4,7 +4,7 @@ import './App.css';
 import Alert from '../reusable/Alert/Alert';
 import {CircularProgress, Container, Typography} from '@material-ui/core';
 import ProductList from '../ProductList/ProductList';
-import {getCartProducts} from '../../utils/api';
+import {checkProduct, getCartProducts} from '../../utils/api';
 
 const initialState = {
   fetchingProducts: true,
