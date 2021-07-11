@@ -12,6 +12,7 @@ const initialState = {
   fetchingProducts: true,
   productsInCart: [],
   mainErrorMessage: '',
+  errorMessage: '',
 };
 
 function reducer( state = initialState, action ) {
@@ -26,12 +27,17 @@ function reducer( state = initialState, action ) {
       return {
         ...state,
         productsInCart: action.payload.productsInCart,
-      }
+      };
     case 'SET_MAIN_ERROR':
       return {
         ...state,
         fetchingProducts: false,
         mainErrorMessage: action.payload.mainErrorMessage,
+      };
+    case 'SET_ERROR':
+      return {
+        ...state,
+        errorMessage: action.payload.errorMessage,
       };
     default:
       return state;
@@ -48,9 +54,9 @@ const App = () => {
         const products = res.map(product => {
           return {
             ...product,
-            quantity: product.min
-          }
-        })
+            quantity: product.min,
+          };
+        });
         dispatch({
           type: 'SET_CART_PRODUCTS',
           payload: {
@@ -68,17 +74,17 @@ const App = () => {
       });
   }, []);
 
-   function correctQuantity(pid, quantity, productsInCart) {
+  function correctQuantity( pid, quantity, productsInCart ) {
     checkProduct(pid, quantity)
       .then(res => {
-        if (res.isError && res.errorType === 'INCORRECT_QUANTITY') {
-          console.log(productsInCart)
+        if ( res.isError && res.errorType === 'INCORRECT_QUANTITY' ) {
+          console.log(productsInCart);
           const updatedProductList = productsInCart.map(product => {
-            if (product.pid === pid) {
+            if ( product.pid === pid ) {
               return {
                 ...product,
-                quantity: product.min
-              }
+                quantity: product.min,
+              };
             } else {
               return product;
             }
@@ -88,28 +94,51 @@ const App = () => {
             type: 'UPDATE_CART_PRODUCTS',
             payload: {
               productsInCart: updatedProductList,
-            }
-          })
-        } else if (res.isError) {
-          throw new Error(res.message)
+            },
+          });
+
+          dispatch({
+            type: 'SET_ERROR',
+            payload: {
+              errorMessage: res.message,
+            },
+          });
+        } else if ( res.isError ) {
+          throw new Error(res.message);
         }
       }).catch(err => {
-        console.log(err)
+      dispatch({
+        type: 'SET_ERROR',
+        payload: {
+          errorMessage: err.message,
+        },
+      });
     });
   }
 
-  const addProduct = async (pid) => {
+  const clearError = () => {
+    dispatch({
+      type: 'SET_ERROR',
+      payload: {
+        errorMessage: '',
+      },
+    });
+  };
+
+  const addProduct = async ( pid ) => {
+    if ( state.errorMessage ) clearError();
+
     let quantity;
 
     const updatedProductList = state.productsInCart.map(product => {
-      if (product.pid === pid) {
+      if ( product.pid === pid ) {
         quantity = product.quantity + 1;
         return {
           ...product,
           quantity,
-        }
+        };
       } else {
-        return product
+        return product;
       }
     });
 
@@ -117,23 +146,25 @@ const App = () => {
       type: 'UPDATE_CART_PRODUCTS',
       payload: {
         productsInCart: updatedProductList,
-      }
-    })
+      },
+    });
 
-    debounceFetch(pid, quantity, state.productsInCart)
-  }
+    debounceFetch(pid, quantity, state.productsInCart);
+  };
 
-  const removeProduct = (pid) => {
+  const removeProduct = ( pid ) => {
+    if ( state.errorMessage ) clearError();
+
     let quantity;
     const updatedProductList = state.productsInCart.map(product => {
-      if (product.pid === pid) {
+      if ( product.pid === pid ) {
         quantity = product.quantity - 1;
         return {
           ...product,
           quantity,
-        }
+        };
       } else {
-        return product
+        return product;
       }
     });
 
@@ -141,22 +172,23 @@ const App = () => {
       type: 'UPDATE_CART_PRODUCTS',
       payload: {
         productsInCart: updatedProductList,
-      }
-    })
+      },
+    });
 
-    debounceFetch(pid, quantity, state.productsInCart)
-  }
+    debounceFetch(pid, quantity, state.productsInCart);
+  };
 
   const getContent = () => {
     return state.mainErrorMessage
            ?
-           <Alert message={state.mainErrorMessage} className='mainError'/>
+           <Alert message={ state.mainErrorMessage } className='mainError' />
            :
            <ProductList
              productsInCart={ state.productsInCart }
              fetchingProducts={ state.fetchingProducts }
-             addProduct={addProduct}
-             removeProduct={removeProduct}
+             errorMessage={ state.errorMessage }
+             addProduct={ addProduct }
+             removeProduct={ removeProduct }
            />;
   };
 

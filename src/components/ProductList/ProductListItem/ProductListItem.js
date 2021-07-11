@@ -29,7 +29,7 @@ const ProductListItem = ( {product, addProduct, removeProduct} ) => {
           cena: { product.price.replace('.', ',') } zł
         </span>
       </div>
-      <div className={'productListItem__actionsContainer'}>
+      <div className={ 'productListItem__actionsContainer' }>
         <div className={ 'productListItem__buttonsContainer' }>
           <div tabIndex={ 0 } role='button' onClick={ removeProductFromCart }>
             <IconButton
@@ -44,7 +44,7 @@ const ProductListItem = ( {product, addProduct, removeProduct} ) => {
             <IconButton
               aria-label='add'
               color={ 'primary' }
-              disabled={ product.isBlocked || product.quantity >= product.max }
+              disabled={ shouldBlockAddButton }
             >
               <AddIcon />
             </IconButton>

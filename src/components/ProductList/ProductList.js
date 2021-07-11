@@ -4,36 +4,42 @@ import './ProductList.css';
 
 import {List, ListItem} from '@material-ui/core';
 import ProductListItem from './ProductListItem/ProductListItem';
+import Alert from '../reusable/Alert/Alert';
 
 const ProductList = props => {
   const calculateTotal = () => {
     return props.productsInCart
-      .reduce((prev, current) => {
-      return prev + (current.quantity * (current.price * 1))
-    }, 0)
+      .reduce(( prev, current ) => {
+        return prev + ( current.quantity * ( current.price * 1 ) );
+      }, 0)
       .toFixed(2)
       .toString()
-      .replace('.', ',')
-  }
-  
+      .replace('.', ',');
+  };
+
   return (
-    <List component='ul'>
+    <>
+      <List component='ul'>
+        {
+          props.productsInCart.map(product => {
+            return <ProductListItem
+              key={ product.pid }
+              product={ product }
+              addProduct={ props.addProduct }
+              removeProduct={ props.removeProduct }
+            />;
+          })
+        }
+        <ListItem
+          className={ 'productList__totalInfo' }
+        >
+          Całkowita wartość zamówienia wynosi&nbsp;<b>{ calculateTotal() } zł</b>
+        </ListItem>
+      </List>
       {
-        props.productsInCart.map(product => {
-          return <ProductListItem
-            key={product.pid}
-            product={product}
-            addProduct={props.addProduct}
-            removeProduct={props.removeProduct}
-          />;
-        })
+        props.errorMessage && <Alert message={ props.errorMessage } className={ 'productList__errorMessage' } />
       }
-      <ListItem
-      className={'productList__totalInfo'}
-      >
-        Całkowita wartość zamówienia wynosi&nbsp;<b>{calculateTotal()} zł</b>
-      </ListItem>
-    </List>
+    </>
   );
 };
 

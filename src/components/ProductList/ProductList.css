@@ -4,3 +4,12 @@
     padding-top: 3rem !important;
     font-size: 2rem;
 }
+
+.productList__errorMessage {
+    background-color: salmon;
+    color: darkred;
+    border: 1px solid darkred;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    margin: 1.25rem 0 !important;
+}
