@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './ProductList.css';
 
 import {List, ListItem} from '@material-ui/core';
 import ProductListItem from './ProductListItem/ProductListItem';
@@ -27,7 +28,11 @@ const ProductList = props => {
           />;
         })
       }
-      <ListItem>Całkowita wartość zamówienia wynosi {calculateTotal()}</ListItem>
+      <ListItem
+      className={'productList__totalInfo'}
+      >
+        Całkowita wartość zamówienia wynosi&nbsp;<b>{calculateTotal()} zł</b>
+      </ListItem>
     </List>
   );
 };

@@ -25,7 +25,9 @@ const ProductListItem = ( {product, addProduct, removeProduct} ) => {
     <ListItem className={ 'productListItem__wrapper' }>
       <div className={ 'productListItem__infoContainer' }>
         <span className={ 'productListItem__nameInfo' }>{ product.name }</span>
-        <span className={ 'productListItem__priceInfo' }>cena: { product.price.replace('.', ',') }</span>
+        <span className={ 'productListItem__priceInfo' }>
+          cena: { product.price.replace('.', ',') } zł
+        </span>
       </div>
       <div className={'productListItem__actionsContainer'}>
         <div className={ 'productListItem__buttonsContainer' }>
