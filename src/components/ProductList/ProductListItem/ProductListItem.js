@@ -59,9 +59,16 @@ const ProductListItem = ( {product, addProduct, removeProduct} ) => {
 };
 
 ProductListItem.propTypes = {
+  addProduct: PropTypes.func,
+  removeProduct: PropTypes.func,
   product: PropTypes.shape({
     name: PropTypes.string,
     price: PropTypes.string,
+    quantity: PropTypes.number,
+    isBlocked: PropTypes.bool,
+    pid: PropTypes.string,
+    min: PropTypes.number,
+    max: PropTypes.number,
   }),
 };
 

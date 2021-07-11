@@ -6,9 +6,9 @@ import {List, ListItem} from '@material-ui/core';
 import ProductListItem from './ProductListItem/ProductListItem';
 import Alert from '../reusable/Alert/Alert';
 
-const ProductList = props => {
+const ProductList = ({productsInCart, addProduct, removeProduct, errorMessage}) => {
   const calculateTotal = () => {
-    return props.productsInCart
+    return productsInCart
       .reduce(( prev, current ) => {
         return prev + ( current.quantity * ( current.price * 1 ) );
       }, 0)
@@ -21,12 +21,12 @@ const ProductList = props => {
     <>
       <List component='ul'>
         {
-          props.productsInCart.map(product => {
+          productsInCart.map(product => {
             return <ProductListItem
               key={ product.pid }
               product={ product }
-              addProduct={ props.addProduct }
-              removeProduct={ props.removeProduct }
+              addProduct={ addProduct }
+              removeProduct={ removeProduct }
             />;
           })
         }
@@ -37,13 +37,20 @@ const ProductList = props => {
         </ListItem>
       </List>
       {
-        props.errorMessage && <Alert message={ props.errorMessage } className={ 'productList__errorMessage' } />
+        errorMessage &&
+        <Alert
+          message={ errorMessage }
+          className={ 'productList__errorMessage' }
+        />
       }
     </>
   );
 };
 
 ProductList.propTypes = {
+  addProduct: PropTypes.func,
+  removeProduct: PropTypes.func,
+  errorMessage: PropTypes.string,
   productsInCart: PropTypes.array,
 };
 
