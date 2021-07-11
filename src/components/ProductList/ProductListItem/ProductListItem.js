@@ -27,28 +27,30 @@ const ProductListItem = ( {product, addProduct, removeProduct} ) => {
         <span className={ 'productListItem__nameInfo' }>{ product.name }</span>
         <span className={ 'productListItem__priceInfo' }>cena: { product.price.replace('.', ',') }</span>
       </div>
-      <div className={ 'productListItem__buttonsContainer' }>
-        <div tabIndex={ 0 } role='button' onClick={ removeProductFromCart }>
-          <IconButton
-            aria-label='delete'
-            color={ 'secondary' }
-            disabled={ shouldBlockRemoveButton }
-          >
-            <RemoveIcon />
-          </IconButton>
+      <div className={'productListItem__actionsContainer'}>
+        <div className={ 'productListItem__buttonsContainer' }>
+          <div tabIndex={ 0 } role='button' onClick={ removeProductFromCart }>
+            <IconButton
+              aria-label='delete'
+              color={ 'secondary' }
+              disabled={ shouldBlockRemoveButton }
+            >
+              <RemoveIcon />
+            </IconButton>
+          </div>
+          <div tabIndex={ 0 } role='button' onClick={ addProductToCart }>
+            <IconButton
+              aria-label='add'
+              color={ 'primary' }
+              disabled={ product.isBlocked || product.quantity >= product.max }
+            >
+              <AddIcon />
+            </IconButton>
+          </div>
         </div>
-        <div tabIndex={ 0 } role='button' onClick={ addProductToCart }>
-          <IconButton
-            aria-label='add'
-            color={ 'primary' }
-            disabled={ product.isBlocked || product.quantity >= product.max }
-          >
-            <AddIcon />
-          </IconButton>
+        <div>
+          Obecnie masz <b>{ product.quantity } szt.</b> produktu
         </div>
-      </div>
-      <div>
-        Obecnie masz { product.quantity } szt. produktu
       </div>
     </ListItem>
   );
