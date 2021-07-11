@@ -1,7 +1,7 @@
 export const getCartProducts = async () => {
   try {
     const response = await fetch('http://localhost:3030/api/cart');
-    return await response.json();
+    return response.json();
   } catch (err) {
     throw new Error('Ups... Coś poszło nie tak w trakcie pobierania produktów. Odśwież stronę, jeżeli to nie zadziała skontaktuj się z nami');
   }
@@ -16,7 +16,7 @@ export const checkProduct = async (pid, quantity) => {
       },
       body: JSON.stringify({pid, quantity}),
     });
-    return await response.json();
+    return response.json();
   } catch (err) {
     throw new Error('Ups... Coś poszło nie tak w trakcie sprawdzania poprawności produktów. Odśwież stronę i spróbuj pownonie.');
   }

@@ -1,5 +1,7 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useCallback, useEffect, useReducer} from 'react';
 import './App.css';
+
+import debounce from '../../utils/debounce';
 
 import Alert from '../reusable/Alert/Alert';
 import {CircularProgress, Container, Typography} from '@material-ui/core';
@@ -38,6 +40,7 @@ function reducer( state = initialState, action ) {
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const debounceFetch = useCallback(debounce(correctQuantity, 500), []);
 
   useEffect(() => {
     getCartProducts()
@@ -65,12 +68,45 @@ const App = () => {
       });
   }, []);
 
-  const addProduct = (pid) => {
+   function correctQuantity(pid, quantity, productsInCart) {
+    checkProduct(pid, quantity)
+      .then(res => {
+        if (res.isError && res.errorType === 'INCORRECT_QUANTITY') {
+          console.log(productsInCart)
+          const updatedProductList = productsInCart.map(product => {
+            if (product.pid === pid) {
+              return {
+                ...product,
+                quantity: product.min
+              }
+            } else {
+              return product;
+            }
+          });
+
+          dispatch({
+            type: 'UPDATE_CART_PRODUCTS',
+            payload: {
+              productsInCart: updatedProductList,
+            }
+          })
+        } else if (res.isError) {
+          throw new Error(res.message)
+        }
+      }).catch(err => {
+        console.log(err)
+    });
+  }
+
+  const addProduct = async (pid) => {
+    let quantity;
+
     const updatedProductList = state.productsInCart.map(product => {
       if (product.pid === pid) {
+        quantity = product.quantity + 1;
         return {
           ...product,
-          quantity: product.quantity + 1
+          quantity,
         }
       } else {
         return product
@@ -83,14 +119,18 @@ const App = () => {
         productsInCart: updatedProductList,
       }
     })
+
+    debounceFetch(pid, quantity, state.productsInCart)
   }
 
   const removeProduct = (pid) => {
+    let quantity;
     const updatedProductList = state.productsInCart.map(product => {
       if (product.pid === pid) {
+        quantity = product.quantity - 1;
         return {
           ...product,
-          quantity: product.quantity - 1
+          quantity,
         }
       } else {
         return product
@@ -103,6 +143,8 @@ const App = () => {
         productsInCart: updatedProductList,
       }
     })
+
+    debounceFetch(pid, quantity, state.productsInCart)
   }
 
   const getContent = () => {
